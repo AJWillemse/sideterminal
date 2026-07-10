@@ -19,7 +19,7 @@
       <stop offset="0" stop-color="#7ec3f7"/><stop offset="1" stop-color="#4aa3e8"/>
     </linearGradient>
     <linearGradient id="stripe" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0" stop-color="#f2e3bd"/><stop offset="1" stop-color="#e8cf9b"/>
+      <stop offset="0" stop-color="#ffb340"/><stop offset="1" stop-color="#f59014"/>
     </linearGradient>
   </defs>
 
@@ -132,8 +132,8 @@
       <g transform="translate(321,387)">
         <rect width="24" height="24" rx="7" fill="#f7f5f0"/>
         <path d="M6.5 4.6c1 .8 1.6 1.7 1.6 3.4v8c0 1.7-.6 2.6-1.6 3.4-.5-.9-.8-2-.8-3.4V8c0-1.4.3-2.5.8-3.4Z" fill="url(#stripe)"/>
-        <path d="m11.2 8.6 4.4 3.4-4.4 3.4" fill="none" stroke="#c9a860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M15.4 16.6h3.4" stroke="#c9a860" stroke-width="1.8" stroke-linecap="round"/>
+        <path d="m11.2 8.6 4.4 3.4-4.4 3.4" fill="none" stroke="#f59014" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15.4 16.6h3.4" stroke="#f59014" stroke-width="1.8" stroke-linecap="round"/>
       </g>
       <g transform="translate(351,387)">
         <rect width="24" height="24" rx="7" fill="#ececf2"/>
