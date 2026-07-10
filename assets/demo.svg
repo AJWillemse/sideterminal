@@ -1,0 +1,178 @@
+<svg viewBox="0 0 660 430" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, 'Segoe UI', Helvetica, Arial, sans-serif">
+  <!-- SideTerminal edge-reveal demo: pure CSS animation, loops forever.
+       Plays inside GitHub READMEs (no scripts, no external assets). -->
+  <defs>
+    <clipPath id="screen"><rect x="10" y="10" width="640" height="410" rx="18"/></clipPath>
+    <linearGradient id="wall" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#181738"/><stop offset=".5" stop-color="#0e1626"/><stop offset="1" stop-color="#0b1a1c"/>
+    </linearGradient>
+    <radialGradient id="blobA" cx=".2" cy=".1" r=".7">
+      <stop offset="0" stop-color="#5e5adb" stop-opacity=".55"/><stop offset="1" stop-color="#5e5adb" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blobB" cx=".85" cy=".95" r=".8">
+      <stop offset="0" stop-color="#25806f" stop-opacity=".6"/><stop offset="1" stop-color="#25806f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="blobC" cx=".9" cy=".15" r=".6">
+      <stop offset="0" stop-color="#2a79a8" stop-opacity=".5"/><stop offset="1" stop-color="#2a79a8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="folder" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#7ec3f7"/><stop offset="1" stop-color="#4aa3e8"/>
+    </linearGradient>
+    <linearGradient id="stripe" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#f2e3bd"/><stop offset="1" stop-color="#e8cf9b"/>
+    </linearGradient>
+  </defs>
+
+  <style>
+    .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+    /* --- timeline: 14s loop --- */
+    .cursor {
+      animation: cursorPath 14s cubic-bezier(.4,.1,.2,1) infinite;
+    }
+    @keyframes cursorPath {
+      0%, 8%   { transform: translate(238px, 215px); }
+      22%, 26% { transform: translate(612px, 220px); }
+      36%      { transform: translate(500px, 205px); }
+      55%, 72% { transform: translate(545px, 305px); }
+      84%, 100%{ transform: translate(238px, 215px); }
+    }
+    .edge {
+      opacity: 0;
+      animation: edgeGlow 14s ease infinite;
+    }
+    @keyframes edgeGlow {
+      0%, 16% { opacity: 0; } 21%, 27% { opacity: .95; } 33%, 100% { opacity: 0; }
+    }
+    .term {
+      transform: translateX(330px); opacity: 0;
+      animation: termSlide 14s infinite;
+    }
+    @keyframes termSlide {
+      0%, 24%  { transform: translateX(330px); opacity: 0; }
+      26%      { opacity: 1; }
+      31%      { transform: translateX(-10px); opacity: 1; }
+      34%, 76% { transform: translateX(0); opacity: 1; }
+      86%, 100%{ transform: translateX(330px); opacity: 0; }
+    }
+    .l1 { animation: appear 14s infinite; }
+    .l2 { animation: appear 14s infinite; animation-delay: .9s; }
+    .l3 { animation: appear 14s infinite; animation-delay: 2.1s; }
+    .l4 { animation: appear 14s infinite; animation-delay: 3s; }
+    .l5 { animation: appear 14s infinite; animation-delay: 3.6s; }
+    @keyframes appear {
+      0%, 38% { opacity: 0; } 40%, 100% { opacity: 1; }
+    }
+    .caret { animation: blink 1s steps(1) infinite; }
+    @keyframes blink { 50% { opacity: 0; } }
+    .cap { animation: caps 14s steps(1) infinite; }
+    @media (prefers-reduced-motion: reduce) {
+      .cursor, .edge, .term, .l1, .l2, .l3, .l4, .l5 { animation: none; }
+      .term { transform: none; opacity: 1; }
+      .l1,.l2,.l3,.l4,.l5 { opacity: 1; }
+    }
+  </style>
+
+  <!-- ===== Screen ===== -->
+  <rect x="10" y="10" width="640" height="410" rx="18" fill="url(#wall)" stroke="#2a2a35" stroke-width="1"/>
+  <g clip-path="url(#screen)">
+    <rect x="10" y="10" width="640" height="410" fill="url(#blobA)"/>
+    <rect x="10" y="10" width="640" height="410" fill="url(#blobB)"/>
+    <rect x="10" y="10" width="640" height="410" fill="url(#blobC)"/>
+
+    <!-- Menu bar -->
+    <rect x="10" y="10" width="640" height="26" fill="#161826" opacity=".72"/>
+    <path transform="translate(26,17) scale(0.0135)" fill="#f5f5f7" d="M788 341c-6 4-104 60-104 185 0 145 127 196 131 197-1 3-20 71-67 141-42 61-86 122-152 122s-84-39-160-39c-75 0-101 40-162 40s-103-57-152-126C66 779 20 651 20 530c0-195 127-298 251-298 66 0 121 43 163 43 40 0 102-46 177-46 29 0 131 3 177 112zM554 96c31-37 53-88 53-139 0-7-1-14-2-20-50 2-110 34-146 76-28 32-55 83-55 135 0 8 2 16 2 18 3 1 9 2 14 2 45 0 102-30 134-72z"/>
+    <text x="46" y="27" font-size="11" font-weight="700" fill="#f5f5f7">Finder</text>
+    <text x="92" y="27" font-size="10.5" fill="#ffffff" opacity=".62">File&#160;&#160;&#160;Edit&#160;&#160;&#160;View&#160;&#160;&#160;Go&#160;&#160;&#160;Window&#160;&#160;&#160;Help</text>
+    <text x="560" y="27" font-size="10" fill="#ffffff" opacity=".82">Fri 10 Jul&#160;&#160;9:41 AM</text>
+
+    <!-- Finder window -->
+    <g>
+      <rect x="46" y="62" width="330" height="240" rx="11" fill="#1c1d28" opacity=".94" stroke="#3a3b4a" stroke-width="1"/>
+      <rect x="46" y="62" width="104" height="240" rx="11" fill="#ffffff" opacity=".05"/>
+      <circle cx="64" cy="80" r="4.5" fill="#ff5f57"/><circle cx="79" cy="80" r="4.5" fill="#febc2e"/><circle cx="94" cy="80" r="4.5" fill="#28c840"/>
+      <text x="60" y="106" font-size="7.5" font-weight="700" fill="#ffffff" opacity=".38">FAVOURITES</text>
+      <g opacity=".85">
+        <rect x="58" y="114" width="82" height="15" rx="4.5" fill="#ffffff" opacity=".10"/>
+        <rect x="63" y="118" width="7" height="7" rx="2" fill="#5ea7f7"/><rect x="75" y="119.5" width="42" height="4.5" rx="2.2" fill="#ffffff" opacity=".3"/>
+        <rect x="63" y="136" width="7" height="7" rx="2" fill="#9a8cf5"/><rect x="75" y="137.5" width="34" height="4.5" rx="2.2" fill="#ffffff" opacity=".22"/>
+        <rect x="63" y="154" width="7" height="7" rx="2" fill="#57c6b0"/><rect x="75" y="155.5" width="46" height="4.5" rx="2.2" fill="#ffffff" opacity=".22"/>
+        <rect x="63" y="172" width="7" height="7" rx="2" fill="#e8a04c"/><rect x="75" y="173.5" width="38" height="4.5" rx="2.2" fill="#ffffff" opacity=".22"/>
+      </g>
+      <text x="166" y="86" font-size="9.5" font-weight="700" fill="#ffffff" opacity=".82">Projects</text>
+      <rect x="330" y="76" width="34" height="10" rx="5" fill="#ffffff" opacity=".10"/>
+      <!-- folders -->
+      <g>
+        <g transform="translate(174,110)"><path d="M0 3a3 3 0 0 1 3-3h8l3 3h14a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3Z" fill="url(#folder)"/><rect x="2" y="26" width="27" height="4.5" rx="2.2" fill="#ffffff" opacity=".3"/></g>
+        <g transform="translate(238,110)"><path d="M0 3a3 3 0 0 1 3-3h8l3 3h14a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3Z" fill="url(#folder)"/><rect x="4" y="26" width="22" height="4.5" rx="2.2" fill="#ffffff" opacity=".3"/></g>
+        <g transform="translate(302,110)"><path d="M0 3a3 3 0 0 1 3-3h8l3 3h14a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3Z" fill="url(#folder)"/><rect x="1" y="26" width="29" height="4.5" rx="2.2" fill="#ffffff" opacity=".3"/></g>
+        <g transform="translate(174,168)"><path d="M0 3a3 3 0 0 1 3-3h8l3 3h14a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3Z" fill="url(#folder)"/><rect x="3" y="26" width="24" height="4.5" rx="2.2" fill="#ffffff" opacity=".3"/></g>
+        <g transform="translate(238,168)"><path d="M0 3a3 3 0 0 1 3-3h8l3 3h14a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3Z" fill="url(#folder)"/><rect x="2" y="26" width="26" height="4.5" rx="2.2" fill="#ffffff" opacity=".3"/></g>
+        <g transform="translate(302,168)"><path d="M0 3a3 3 0 0 1 3-3h8l3 3h14a3 3 0 0 1 3 3v13a3 3 0 0 1-3 3H3a3 3 0 0 1-3-3V3Z" fill="url(#folder)"/><rect x="4" y="26" width="20" height="4.5" rx="2.2" fill="#ffffff" opacity=".3"/></g>
+      </g>
+    </g>
+
+    <!-- Dock -->
+    <g>
+      <rect x="222" y="382" width="216" height="34" rx="11" fill="#1e202e" opacity=".55" stroke="#ffffff" stroke-opacity=".14"/>
+      <g transform="translate(231,387)">
+        <rect width="24" height="24" rx="7" fill="#1b7ae8"/>
+        <path d="M12.6 3.2c-.9 2.6-1.4 5.6-1.4 8.8 0 1.3.1 2.6.3 3.9h-2.2a.9.9 0 0 0 0 1.8h2.5c.2 1.2.5 2.3.9 3.3H6a3 3 0 0 1-3-3V6.2a3 3 0 0 1 3-3h6.6Z" fill="#ffffff" opacity=".92" transform="scale(.92) translate(1,1)"/>
+        <circle cx="7.6" cy="10" r="1" fill="#0b53a8"/><circle cx="16.4" cy="10" r="1" fill="#0b53a8"/>
+      </g>
+      <g transform="translate(261,387)">
+        <rect width="24" height="24" rx="7" fill="#1670df"/><circle cx="12" cy="12" r="8" fill="#f3fbff"/>
+        <path d="m16.6 7.4-3.3 3.5-4 5.7 3.4-3.5 3.9-5.7Z" fill="#ff3b30"/>
+      </g>
+      <g transform="translate(291,387)">
+        <rect width="24" height="24" rx="7" fill="#18b943"/>
+        <path d="M12 5.4c4.2 0 7.6 2.6 7.6 5.9 0 3.2-3.4 5.9-7.6 5.9-.8 0-1.6-.1-2.4-.3-.9.7-2.1 1.2-3.6 1.4.7-.7 1.1-1.5 1.2-2.4-1.7-1-2.8-2.7-2.8-4.6 0-3.3 3.4-5.9 7.6-5.9Z" fill="#ffffff"/>
+      </g>
+      <!-- SideTerminal icon, vector mini -->
+      <g transform="translate(321,387)">
+        <rect width="24" height="24" rx="7" fill="#f7f5f0"/>
+        <path d="M6.5 4.6c1 .8 1.6 1.7 1.6 3.4v8c0 1.7-.6 2.6-1.6 3.4-.5-.9-.8-2-.8-3.4V8c0-1.4.3-2.5.8-3.4Z" fill="url(#stripe)"/>
+        <path d="m11.2 8.6 4.4 3.4-4.4 3.4" fill="none" stroke="#c9a860" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        <path d="M15.4 16.6h3.4" stroke="#c9a860" stroke-width="1.8" stroke-linecap="round"/>
+      </g>
+      <g transform="translate(351,387)">
+        <rect width="24" height="24" rx="7" fill="#ececf2"/>
+        <g transform="translate(12,12)">
+          <ellipse rx="2.2" ry="4.6" fill="#ffb02e" opacity=".85"/><ellipse rx="2.2" ry="4.6" transform="rotate(60)" fill="#f8503b" opacity=".8"/><ellipse rx="2.2" ry="4.6" transform="rotate(120)" fill="#3478f6" opacity=".8"/>
+        </g>
+      </g>
+      <rect x="384" y="390" width="1" height="18" fill="#ffffff" opacity=".2"/>
+      <g transform="translate(392,387)">
+        <rect width="24" height="24" rx="7" fill="#ffffff" opacity=".16"/>
+        <path d="M7.8 8.6h8.4l-.7 8.4a1.8 1.8 0 0 1-1.8 1.7h-3.4a1.8 1.8 0 0 1-1.8-1.7l-.7-8.4Z" fill="#c7cdd8" opacity=".92"/>
+        <rect x="6.6" y="6.8" width="10.8" height="1.3" fill="#dfe4ec"/>
+      </g>
+    </g>
+
+    <!-- Edge hint -->
+    <rect class="edge" x="644" y="60" width="3" height="310" rx="1.5" fill="#4fd6c8"/>
+
+    <!-- SideTerminal card -->
+    <g class="term">
+      <g>
+        <rect x="352" y="48" width="286" height="352" rx="13" fill="#101218" opacity=".96" stroke="#ffffff" stroke-opacity=".14"/>
+        <circle cx="370" cy="66" r="4" fill="#4fd6c8"/>
+        <text x="382" y="69.5" class="mono" font-size="8.5" fill="#63636f" letter-spacing=".4">sideterminal — zsh</text>
+        <line x1="352" y1="80" x2="638" y2="80" stroke="#ffffff" stroke-opacity=".07"/>
+        <g class="mono" font-size="10.5" fill="#cdd3d0">
+          <text class="l1" x="368" y="104"><tspan fill="#4fd6c8" font-weight="700">➜</tspan>&#160;<tspan fill="#b8a2f2">~/project</tspan>&#160;claude</text>
+          <text class="l2" x="368" y="126" fill="#8b93a5">✳ Welcome back — session restored.</text>
+          <text class="l3" x="368" y="148"><tspan fill="#4fd6c8" font-weight="700">➜</tspan>&#160;<tspan fill="#b8a2f2">~/project</tspan>&#160;npm run build</text>
+          <text class="l4" x="368" y="170" fill="#7ee2a0">✓ built in 1.24s — still running while hidden</text>
+          <text class="l5" x="368" y="192"><tspan fill="#4fd6c8" font-weight="700">➜</tspan>&#160;<tspan fill="#b8a2f2">~/project</tspan></text>
+        </g>
+        <rect class="caret" x="440" y="183" width="7" height="12" fill="#4fd6c8"/>
+      </g>
+    </g>
+
+    <!-- Cursor -->
+    <g class="cursor">
+      <path d="M0 0 13.5 8.8 7.2 10 4 16.8 Z" fill="#ffffff" stroke="#000000" stroke-width="1.2"/>
+    </g>
+  </g>
+</svg>

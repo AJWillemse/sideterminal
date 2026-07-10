@@ -18,6 +18,10 @@
   <a href="https://github.com/bunnysayzz/sideterminal/actions/workflows/build.yml"><img src="https://github.com/bunnysayzz/sideterminal/actions/workflows/build.yml/badge.svg" alt="Build"></a>
 </p>
 
+<p align="center">
+  <img src="assets/demo.svg" alt="SideTerminal edge-reveal demo: move the mouse to the screen edge and the terminal glides in; walk away and it hides while sessions keep running" width="780">
+</p>
+
 ---
 
 ## Features
