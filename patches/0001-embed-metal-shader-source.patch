@@ -1,0 +1,19 @@
+diff --git a/src/build/SharedDeps.zig b/src/build/SharedDeps.zig
+index b68be92..6c99f70 100644
+--- a/src/build/SharedDeps.zig
++++ b/src/build/SharedDeps.zig
+@@ -441,10 +441,11 @@ pub fn add(
+     if (step.rootModuleTarget().os.tag.isDarwin()) {
+         try @import("apple_sdk").addPaths(b, step);
+ 
+-        const metallib = self.metallib.?;
+-        metallib.output.addStepDependencies(&step.step);
++        // SideTerminal: embed the Metal shader source directly and compile
++        // it at runtime, because the Metal offline compiler is unavailable
++        // on hosts with only Command Line Tools installed.
+         step.root_module.addAnonymousImport("ghostty_metallib", .{
+-            .root_source_file = metallib.output,
++            .root_source_file = b.path("src/renderer/shaders/shaders.metal"),
+         });
+     }
+ 

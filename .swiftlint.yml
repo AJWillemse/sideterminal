@@ -1,0 +1,28 @@
+# SwiftLint config — lints only SideTerminal's own code, never the vendored
+# engine layer. Kept lenient: style guidance, not a gate.
+included:
+  - app/Sources/SideTerminal
+  - app/Core/Sources
+  - app/Core/Tests
+
+excluded:
+  - app/Sources/SideTerminal/Vendor
+  - app/.build
+  - build
+
+disabled_rules:
+  - line_length
+  - todo
+  - type_body_length
+  - file_length
+  - function_body_length
+  - cyclomatic_complexity
+  - identifier_name
+  - large_tuple
+
+opt_in_rules:
+  - empty_count
+  - closure_spacing
+  - redundant_nil_coalescing
+
+reporter: "github-actions-logging"

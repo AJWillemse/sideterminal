@@ -1,0 +1,21 @@
+diff --git a/build.zig b/build.zig
+index 8ef7701..d3fcb0b 100644
+--- a/build.zig
++++ b/build.zig
+@@ -200,6 +200,16 @@ pub fn build(b: *std.Build) !void {
+                 lib_shared.install("ghostty-internal.so");
+                 lib_static.install("ghostty-internal.a");
+             }
++        } else {
++            // SideTerminal: install the combined static library, header,
++            // and resources directly. We can't build the xcframework on
++            // CLT-only hosts because it requires xcodebuild.
++            b.getInstallStep().dependOn(&b.addInstallLibFile(
++                lib_static.output,
++                "libghostty.a",
++            ).step);
++            resources.install();
++            if (i18n) |v| v.install();
+         }
+     }
+ 

@@ -1,0 +1,35 @@
+diff --git a/src/renderer/metal/shaders.zig b/src/renderer/metal/shaders.zig
+index 0be0235..496b76c 100644
+--- a/src/renderer/metal/shaders.zig
++++ b/src/renderer/metal/shaders.zig
+@@ -334,19 +334,24 @@ pub const BgImage = extern struct {
+ fn initLibrary(device: objc.Object) !objc.Object {
+     const start = try std.time.Instant.now();
+ 
+-    const data = try macos.dispatch.Data.create(
++    // SideTerminal: the embedded "ghostty_metallib" is Metal shader
++    // *source* (not a precompiled metallib) because the offline Metal
++    // compiler is unavailable on CLT-only hosts. Compile it at runtime;
++    // the driver caches the result so this is only slow on first launch.
++    const source = try macos.foundation.String.createWithBytes(
+         @embedFile("ghostty_metallib"),
+-        macos.dispatch.queue.getMain(),
+-        macos.dispatch.Data.DESTRUCTOR_DEFAULT,
++        .utf8,
++        false,
+     );
+-    defer data.release();
++    defer source.release();
+ 
+     var err: ?*anyopaque = null;
+     const library = device.msgSend(
+         objc.Object,
+-        objc.sel("newLibraryWithData:error:"),
++        objc.sel("newLibraryWithSource:options:error:"),
+         .{
+-            data,
++            source,
++            @as(?*anyopaque, null),
+             &err,
+         },
+     );

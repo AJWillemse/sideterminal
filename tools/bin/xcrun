@@ -1,0 +1,9 @@
+#!/bin/bash
+# xcrun shim: Zig 0.15.2 cannot parse the macOS 26 SDK's libSystem.tbd, so we
+# point it at tools/shim-sdk (the real SDK with Zig's bundled tbd swapped in).
+# Resolve the path relative to this script so the repo works from any location.
+SHIM_SDK="$(cd "$(dirname "${BASH_SOURCE[0]}")/../shim-sdk" && pwd)"
+for a in "$@"; do
+    if [ "$a" = "--show-sdk-path" ]; then echo "$SHIM_SDK"; exit 0; fi
+done
+exec /usr/bin/xcrun "$@"

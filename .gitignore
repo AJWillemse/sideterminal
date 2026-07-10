@@ -1,0 +1,32 @@
+# === Reproduced by scripts/bootstrap.sh (not committed) ===
+# Ghostty engine clone (pinned + patched via patches/) — ~3 GB.
+/ghostty/
+# Zig toolchain download — ~440 MB.
+/tools/zig-aarch64-macos-*/
+/tools/zig.tar.xz
+# Machine-specific SDK shim (symlinks into the local CLT SDK).
+/tools/shim-sdk/
+
+# === Build output ===
+/build/
+/app/.build/
+.build/
+*.o
+*.a
+
+# === Generated icons (rebuilt from assets/ by the bundle script) ===
+/build/AppIcon.iconset/
+
+# === Editor / OS cruft ===
+.DS_Store
+*.swp
+*.xcuserstate
+xcuserdata/
+.idea/
+.vscode/
+
+# === Local agent state (not part of the project) ===
+/.claude/
+
+# === Stray duplicate of assets/sideterminal.png (canonical copy lives in assets/) ===
+/sideterminal.png

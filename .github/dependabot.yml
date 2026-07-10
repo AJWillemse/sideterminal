@@ -1,0 +1,13 @@
+# Dependabot keeps our GitHub Actions pinned versions current — free and
+# GitHub-native, no bot to install. (The app has no external package
+# dependencies to track.)
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: "ci"
+    labels:
+      - dependencies
