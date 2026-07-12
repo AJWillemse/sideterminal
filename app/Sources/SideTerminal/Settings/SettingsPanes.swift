@@ -140,6 +140,23 @@ struct GeneralPane: View {
                     .font(.footnote)
                     .foregroundStyle(.secondary)
             }
+
+            Section {
+                Toggle(isOn: $settings.autoCheckForUpdates) {
+                    IconLabel(title: "Automatically Check for Updates", symbol: "arrow.down.circle", color: .teal)
+                }
+                LabeledContent {
+                    Button("Check Now…") {
+                        (NSApp.delegate as? AppDelegate)?.checkForUpdates(nil)
+                    }
+                } label: {
+                    IconLabel(title: "Updates", symbol: "sparkles", color: .purple)
+                }
+            } footer: {
+                Text("SideTerminal is unsigned, so an update is never installed silently — you'll always see and approve it first.")
+                    .font(.footnote)
+                    .foregroundStyle(.secondary)
+            }
         }
         .formStyle(.grouped)
     }

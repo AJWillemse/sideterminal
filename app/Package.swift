@@ -10,6 +10,9 @@ let package = Package(
         // Pure, testable logic lives in its own package so its tests run on
         // any recent macOS; the app itself needs the macOS 26 SDK.
         .package(path: "Core"),
+        // Auto-updates. Its own EdDSA update-signing is separate from Apple
+        // code signing/notarization, so it works for an unsigned/ad-hoc app.
+        .package(url: "https://github.com/sparkle-project/Sparkle", from: "2.6.4"),
     ],
     targets: [
         .systemLibrary(
@@ -27,6 +30,7 @@ let package = Package(
                 "GhosttyKit",
                 "GhosttyObjC",
                 .product(name: "SideTerminalCore", package: "Core"),
+                .product(name: "Sparkle", package: "Sparkle"),
             ],
             path: "Sources/SideTerminal",
             swiftSettings: [
@@ -37,6 +41,11 @@ let package = Package(
                     "-L../ghostty/zig-out/lib",
                     "-lghostty",
                     "-lc++",
+                    // SwiftPM doesn't add this rpath automatically (Xcode's
+                    // "Embed & Sign" build phase normally does). Without it,
+                    // dyld can't resolve @rpath/Sparkle.framework once
+                    // bundle-app.sh copies the framework into Contents/Frameworks.
+                    "-Xlinker", "-rpath", "-Xlinker", "@executable_path/../Frameworks",
                 ]),
                 .linkedFramework("AppKit"),
                 .linkedFramework("SwiftUI"),

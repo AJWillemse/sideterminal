@@ -53,15 +53,17 @@ final class MenuBarController: NSObject {
         // items whose action is the well-known openSettings selector, which
         // breaks the menu's alignment.
         let settings = NSMenuItem(title: "Settings…", action: #selector(menuOpenSettings), keyEquivalent: "")
+        let checkForUpdates = NSMenuItem(title: "Check for Updates…", action: #selector(menuCheckForUpdates), keyEquivalent: "")
         let restart = NSMenuItem(title: "Restart Terminal Session", action: #selector(AppDelegate.restartSession), keyEquivalent: "")
         let quit = NSMenuItem(title: "Quit SideTerminal", action: #selector(AppDelegate.quit), keyEquivalent: "q")
 
-        for entry in [toggle, settings, restart, quit] {
+        for entry in [toggle, settings, checkForUpdates, restart, quit] {
             entry.target = appDelegate
             // Keep the menu clean and perfectly aligned: no per-item icons.
             entry.image = nil
         }
         settings.target = self
+        checkForUpdates.target = self
 
         // Hovering opens the last-10 session switcher to the side.
         let sessions = NSMenuItem(title: "Terminal Sessions", action: nil, keyEquivalent: "")
@@ -74,6 +76,7 @@ final class MenuBarController: NSObject {
         menu.addItem(sessions)
         menu.addItem(.separator())
         menu.addItem(settings)
+        menu.addItem(checkForUpdates)
         menu.addItem(restart)
         menu.addItem(.separator())
         menu.addItem(quit)
@@ -126,6 +129,10 @@ final class MenuBarController: NSObject {
 
     @objc private func menuOpenSettings() {
         appDelegate?.openSettings()
+    }
+
+    @objc private func menuCheckForUpdates() {
+        appDelegate?.checkForUpdates(nil)
     }
 
     private func updateIcon() {

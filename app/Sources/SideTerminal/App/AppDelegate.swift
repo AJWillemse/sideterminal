@@ -41,6 +41,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
 
         sidebar = SidebarController(ghostty: ghostty, settings: settings)
         menuBar = MenuBarController(delegate: self)
+        UpdateController.shared.applyInitialPreference(settings.autoCheckForUpdates)
 
         applyTheme()
         registerHotKey()
@@ -357,8 +358,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, ObservableObject {
         DispatchQueue.main.async { [weak self] in self?.toggleSidebar() }
     }
 
-    /// No update framework is bundled; updates arrive with the app.
-    nonisolated func checkForUpdates(_ sender: Any?) {}
+    /// Routed here from the menu bar's "Check for Updates…" item and from
+    /// Ghostty's own GHOSTTY_ACTION_CHECK_FOR_UPDATES action (its vendored
+    /// layer already calls this selector; SideTerminal previously had it as
+    /// a no-op). Sparkle shows its own native UI — nothing installs without
+    /// the user explicitly approving it.
+    nonisolated func checkForUpdates(_ sender: Any?) {
+        DispatchQueue.main.async {
+            UpdateController.shared.checkForUpdates(sender)
+        }
+    }
 
     /// SideTerminal has no float-on-top menu to synchronize.
     nonisolated func syncFloatOnTopMenu(_ window: NSWindow?) {}

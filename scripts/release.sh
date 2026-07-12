@@ -55,12 +55,47 @@ if [ ! -f ghostty/zig-out/lib/libghostty.a ]; then
     log "Building engine library"
     scripts/build-libghostty.sh
 fi
+# Captured once and reused below so the appcast's sparkle:version always
+# matches the CFBundleVersion actually baked into this build.
+BUILD_NUMBER="$(date +%Y%m%d%H%M)"
 log "Building SideTerminal $VERSION"
-SIDETERMINAL_VERSION="$NUMBER" SIDETERMINAL_BUILD="$(date +%Y%m%d%H%M)" \
+SIDETERMINAL_VERSION="$NUMBER" SIDETERMINAL_BUILD="$BUILD_NUMBER" \
     scripts/bundle-app.sh release
 
 log "Packaging DMG"
 scripts/make-dmg.sh
+
+# --- Sign the DMG for Sparkle and record it in appcast.xml -------------------
+# SideTerminal is unsigned/unnotarized (no paid Apple Developer Program
+# account), so this EdDSA signature is what protects users from a
+# corrupted or tampered update — it's Sparkle's own mechanism, entirely
+# separate from Apple code signing. The private key lives only in this
+# Mac's Keychain (scripts/bundle-app.sh embeds the matching public key).
+log "Signing DMG for Sparkle"
+SIGN_UPDATE="$(find app/.build/artifacts -iname sign_update -path '*bin*' 2>/dev/null | head -1)"
+if [ -z "$SIGN_UPDATE" ]; then
+    echo "error: sign_update tool not found — app/.build/artifacts is missing Sparkle. Run 'swift package resolve' in app/." >&2
+    exit 1
+fi
+SIGN_OUTPUT="$("$SIGN_UPDATE" build/SideTerminal.dmg)"
+ED_SIGNATURE="$(echo "$SIGN_OUTPUT" | grep -oE 'sparkle:edSignature="[^"]+"' | cut -d'"' -f2)"
+DMG_LENGTH="$(echo "$SIGN_OUTPUT" | grep -oE 'length="[^"]+"' | cut -d'"' -f2)"
+if [ -z "$ED_SIGNATURE" ] || [ -z "$DMG_LENGTH" ]; then
+    echo "error: sign_update did not produce a signature: $SIGN_OUTPUT" >&2
+    exit 1
+fi
+
+log "Updating appcast.xml"
+APPCAST_PATH="$ROOT/appcast.xml" \
+    RELEASE_VERSION="$NUMBER" \
+    BUILD="$BUILD_NUMBER" \
+    ED_SIGNATURE="$ED_SIGNATURE" \
+    LENGTH="$DMG_LENGTH" \
+    DOWNLOAD_URL="https://github.com/bunnysayzz/sideterminal/releases/download/$VERSION/SideTerminal.dmg" \
+    python3 scripts/update-appcast.py
+git add appcast.xml
+git commit -m "Add $VERSION to appcast.xml"
+git push origin main
 
 # --- Tag and publish --------------------------------------------------------
 log "Tagging $VERSION"

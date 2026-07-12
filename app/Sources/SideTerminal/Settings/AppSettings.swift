@@ -115,6 +115,22 @@ final class AppSettings: ObservableObject {
         didSet { defaults.set(restoreSession, forKey: "general.restoreSession") }
     }
 
+    /// Whether Sparkle checks for a new release in the background. The app
+    /// is unsigned/unnotarized, so this only ever offers an update for the
+    /// user to explicitly approve — never a silent install.
+    @Published var autoCheckForUpdates: Bool {
+        didSet {
+            defaults.set(autoCheckForUpdates, forKey: "general.autoCheckForUpdates")
+            // AppSettings isn't statically @MainActor, but every mutation of
+            // it in practice happens on the main thread (SwiftUI bindings,
+            // AppDelegate). UpdateController is @MainActor because Sparkle's
+            // updater is UI-facing.
+            MainActor.assumeIsolated {
+                UpdateController.shared.automaticallyChecksForUpdates = autoCheckForUpdates
+            }
+        }
+    }
+
     // MARK: Sidebar
 
     @Published var edge: SidebarEdge {
@@ -222,6 +238,7 @@ final class AppSettings: ObservableObject {
         showInDock = d.object(forKey: "general.showInDock") as? Bool ?? true
         globalShortcut = d.string(forKey: "general.globalShortcut") ?? "cmd+shift+grave"
         restoreSession = d.object(forKey: "general.restoreSession") as? Bool ?? true
+        autoCheckForUpdates = d.object(forKey: "general.autoCheckForUpdates") as? Bool ?? true
 
         edge = SidebarEdge(rawValue: d.string(forKey: "sidebar.edge") ?? "") ?? .right
         sidebarWidth = d.object(forKey: "sidebar.width") as? Double ?? 520
@@ -277,6 +294,7 @@ final class AppSettings: ObservableObject {
         showInDock = true
         globalShortcut = "cmd+shift+grave"
         restoreSession = true
+        autoCheckForUpdates = true
 
         edge = .right
         sidebarWidth = 520

@@ -17,6 +17,20 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 
 cp "$BIN" "$APP/Contents/MacOS/SideTerminal"
 
+# Sparkle.framework (auto-updates). SwiftPM vends it as a prebuilt
+# xcframework artifact; Xcode's "Embed & Sign" build phase normally copies
+# this in, but our build has no Xcode project, so we do it by hand. The
+# framework ships pre-signed (ad-hoc + hardened runtime) by Sparkle itself,
+# so it's copied as-is and never re-signed here — the final `codesign` below
+# deliberately omits --deep so it doesn't touch (or break) this signature.
+SPARKLE_FRAMEWORK="$(find "$ROOT/app/.build/artifacts" -iname 'Sparkle.framework' -path '*macos*' 2>/dev/null | head -1)"
+if [ -z "$SPARKLE_FRAMEWORK" ]; then
+    echo "error: Sparkle.framework not found — run 'swift package resolve' in app/ first." >&2
+    exit 1
+fi
+mkdir -p "$APP/Contents/Frameworks"
+cp -R "$SPARKLE_FRAMEWORK" "$APP/Contents/Frameworks/Sparkle.framework"
+
 # Ghostty runtime resources (terminfo, shell integration, themes).
 cp -R "$ROOT/ghostty/zig-out/share/ghostty" "$APP/Contents/Resources/ghostty"
 cp -R "$ROOT/ghostty/zig-out/share/terminfo" "$APP/Contents/Resources/terminfo"
@@ -68,6 +82,11 @@ cat > "$APP/Contents/Info.plist" <<PLIST
     <key>NSHighResolutionCapable</key><true/>
     <key>NSPrincipalClass</key><string>NSApplication</string>
     <key>NSSupportsAutomaticGraphicsSwitching</key><true/>
+    <key>SUFeedURL</key><string>https://raw.githubusercontent.com/bunnysayzz/sideterminal/main/appcast.xml</string>
+    <key>SUPublicEDKey</key><string>sbR1ti8xhb35X33S7ABqU1SUlX/pGSr9DQlOL1Scdys=</string>
+    <key>SUEnableAutomaticChecks</key><true/>
+    <key>SUScheduledCheckInterval</key><integer>86400</integer>
+    <key>SUAutomaticallyUpdate</key><false/>
 </dict>
 </plist>
 PLIST
