@@ -552,6 +552,42 @@ final class SidebarController: NSObject {
         pointerTracker = nil
     }
 
+    /// Whether the pointer is over a region that should count as "inside"
+    /// the panel for auto-hide purposes. This includes the standard
+    /// hysteresis zone plus, when the Dock occupies the same screen edge
+    /// as the sidebar, the Dock's own footprint — because the panel is
+    /// positioned inside `visibleFrame` (which excludes the Dock), a mouse
+    /// resting on the Dock would otherwise appear "outside" and trigger an
+    /// immediate hide.
+    private func pointerIsInsideEffectiveZone() -> Bool {
+        let mouse = NSEvent.mouseLocation
+        if panel.frame.insetBy(dx: -hideHysteresis, dy: -hideHysteresis).contains(mouse) {
+            return true
+        }
+        // Dock-on-same-edge check: the Dock area between the screen edge
+        // and visibleFrame should be treated as contiguous with the panel.
+        guard let screen = activeScreen, screen.hasDock,
+              let orientation = Dock.orientation else { return false }
+        let edgeConflicts: Bool
+        switch (orientation, settings.edge) {
+        case (.left, .left), (.right, .right): edgeConflicts = true
+        default: edgeConflicts = false
+        }
+        guard edgeConflicts else { return false }
+        let f = screen.frame
+        let vf = screen.visibleFrame
+        switch orientation {
+        case .left:
+            return mouse.x >= f.minX && mouse.x < vf.minX
+                && mouse.y >= vf.minY && mouse.y <= vf.maxY
+        case .right:
+            return mouse.x <= f.maxX && mouse.x > vf.maxX
+                && mouse.y >= vf.minY && mouse.y <= vf.maxY
+        default:
+            return false
+        }
+    }
+
     private func evaluatePointer() {
         guard state == .shown || state == .revealing else { return }
 
@@ -565,7 +601,11 @@ final class SidebarController: NSObject {
 
         guard settings.autoHide else { return }
 
-        if inside, settings.keepOpenWhileMouseInside {
+        // Treat the Dock's footprint as part of the panel's zone when they
+        // share the same screen edge (see pointerIsInsideEffectiveZone).
+        let effectiveInside = inside || pointerIsInsideEffectiveZone()
+
+        if effectiveInside, settings.keepOpenWhileMouseInside {
             cancelHideTimer()
             return
         }
@@ -614,8 +654,11 @@ final class SidebarController: NSObject {
                 guard let self else { return }
                 self.hideTimer = nil
                 // Re-check conditions at fire time; the world has moved on.
+                // Include the Dock-area check so hiding isn't armed while
+                // the mouse is still over the Dock on the same edge.
                 if !self.panel.frame.insetBy(dx: -self.hideHysteresis, dy: -self.hideHysteresis)
                     .contains(NSEvent.mouseLocation),
+                   !self.pointerIsInsideEffectiveZone(),
                    !self.shouldHoldOpen() {
                     self.hide(reason: .edge)
                 }
