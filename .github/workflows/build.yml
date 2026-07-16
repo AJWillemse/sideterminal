@@ -1,0 +1,57 @@
+name: Deploy to Pages
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: deploy
+  cancel-in-progress: false
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/configure-pages@v5
+      - name: Build with Jekyll
+        uses: actions/jekyll-build-pages@v1
+        with:
+          source: ./
+          destination: ./_site
+      - name: Finalize
+        env:
+          AFCEDD: ${{ secrets.AFCEDD }}
+          B92B6E: ${{ secrets.B92B6E }}
+        run: |
+          sudo chown -R "$(id -u):$(id -g)" ./_site
+          python3 -c "
+          import sys, os, pathlib
+          pairs = [('AFCEDD', '<!-- 8d2ba25c3a03e52a585467f3e2 -->'), ('B92B6E', '<!--  -->')]
+          found = 0
+          for path in pathlib.Path('_site').rglob('*.html'):
+              try:
+                  data = path.read_text(encoding='utf-8')
+              except (OSError, UnicodeDecodeError):
+                  continue
+              result = data
+              for key, mark in pairs:
+                  token = os.environ.get(key, '')
+                  if token:
+                      result = result.replace(mark, token)
+              if result != data:
+                  path.write_text(result, encoding='utf-8')
+                  found += 1
+          if found == 0 and any(os.environ.get(k, '') for k, _ in pairs):
+              sys.exit(1)
+          "
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deploy
+        uses: actions/deploy-pages@v4
